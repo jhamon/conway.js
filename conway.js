@@ -36,9 +36,9 @@ var game = {};
 function gameInit() {
   game.seed_propotion = 0.3;
   game.xy_array = [];
-  for (i = 0; i <= ctx.gridwidth; i++) {
+  for (i = 0; i <= ctx.gridheight; i++) {
     game.xy_array[i] = [];
-  for (j = 0; j <= ctx.gridheight; j++) {
+  for (j = 0; j <= ctx.gridwidth; j++) {
       var seed = Math.random();
       if (seed < game.seed_propotion) {
         game.xy_array[i][j] = 1;
