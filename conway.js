@@ -23,12 +23,12 @@ function Init() {
   ctx.canvas.height = window.innerHeight;
   // Determine blocksize so that grid is 40 blocks tall
   // this size is arbitrary, but keeping it small helps performance
-  ctx.blocksize = ctx.canvas.height / 40; 
+  ctx.blocksize = ctx.canvas.height / 50; 
   var marginsize = ctx.blocksize*.1;
   ctx.shim = ctx.blocksize + marginsize;
   ctx.gridwidth = Math.round(ctx.canvas.width / ctx.blocksize);
   ctx.gridheight = Math.round(ctx.canvas.height / ctx.blocksize);
-  console.log(ctx.gridwidth, ctx.gridheight)
+  // console.log(ctx.gridwidth, ctx.gridheight)
 }
 
 function countLiving(gamearray) {
@@ -45,7 +45,7 @@ function countLiving(gamearray) {
 
 var game = {};
 function gameInit() {
-  game.seed_propotion = 0.3;
+  game.seed_propotion = 0.5;
   game.xy_array = [];
   for (i = 0; i <= ctx.gridheight; i++) {
     game.xy_array[i] = [];
@@ -82,15 +82,6 @@ function RuleCheck () {
       var uright = game.xy_array[iabove][jright]; 
       var lright = game.xy_array[ibelow][jright];
       var neighbours = above + below + right + left + uleft + lleft + uright + lright;
-      
-      if (i == 0 && j==0) {
-        console.log("index a b l r", iabove, ibelow, jleft, jright);
-        console.log(i, j, 'n:',neighbours, 'above:', above, 'below:', below);
-        console.log("uleft, uright:", uleft, uright);
-        console.log("lleft, lright:", lleft, lright);
-        console.log("left, right", left, right);
-      }
-
 
   // Any live cell with fewer than two live neighbours dies, as if caused by under-population.
   if (neighbours < 2) {
@@ -98,7 +89,7 @@ function RuleCheck () {
   }
 
   // Any live cell with more than three live neighbours dies, as if by overcrowding.
-  if (neighbours > 4) {
+  if (neighbours > 3) {
     new_xy_array[i][j] = 0;
   }
 
@@ -106,31 +97,35 @@ function RuleCheck () {
   if (!game.xy_array[i][j] && neighbours == 3) {
     new_xy_array[i][j] = 1;
   }
-    }
-  }
-  // game.xy_array = new_xy_array;
+}
+}
+  // Update game state to reflect outcome of rule applications
+  game.xy_array = new_xy_array;
 }
 
 function Draw () {
-  var colors = ['white', 'rgba(82, 192, 247, 0.4)']
+  var colors = ['white', 'rgba(82, 192, 247, 0.8)']
     for (i=0; i < ctx.gridheight; i++) {
       for (j=0; j < ctx.gridwidth; j++) {
-    var opacity = String(Math.random()*0.6);
     ctx.fillStyle = colors[game.xy_array[i][j]];
-    if (i == 0 && j == 0) {
-      ctx.fillStyle = 'red'
-    }
     var yposition = i*ctx.shim;
     var xposition = j*ctx.shim;
-    ctx.fillRect(xposition, yposition, ctx.blocksize, ctx.blocksize);
+    // ctx.fillRect(xposition, yposition, ctx.blocksize, ctx.blocksize);
+    ctx.beginPath();
+    ctx.arc(xposition, yposition, ctx.blocksize/2, 0, 2 * Math.PI, false);
+    ctx.fill();
+    ctx.lineWidth = 0;
   }
   }
-  ctx.fillStyle = 'rgba(82, 192, 247, 1)';
-  ctx.font = '40pt Arial';
+  ctx.fillStyle = 'rgba(82, 192, 247, 0.5)';
+  ctx.fillRect(0, 2*ctx.shim, ctx.canvas.width, ctx.blocksize*5);
+  ctx.fillStyle = 'rgba(100, 120, 120, 1)';
+  ctx.font = '25pt Helvetica, Arial';
   ctx.fillText("Conway's Game of Life", 3*ctx.shim, 4*ctx.shim);
   var living = countLiving(game.xy_array);
-  ctx.font = '20pt Arial';
-  ctx.fillText('alive: '+living, 3*ctx.shim, (ctx.gridheight-5)*ctx.shim);
+  ctx.font = '15pt Helvetica, Arial';
+  ctx.fillText('using HTML5 canvas + javascript', 5*ctx.shim, 6*ctx.shim);
+  ctx.fillText('alive: '+living+'  gen: '+generation, 0.8*ctx.canvas.width, 6*ctx.shim);
 }
 
 function Clear () {
@@ -141,11 +136,16 @@ function Animation () {
   RuleCheck();
   Clear();
   Draw();
+  generation += 1;
+}
+
+function startAnim() {
+  window.setInterval(Animation, 100);
 }
 
 Init();
 var game = {};
 gameInit();
-
-window.setInterval(Animation(), 100)
+var generation = 0;
+startAnim()
 
