@@ -118,14 +118,14 @@ function Draw () {
   }
   }
   ctx.fillStyle = 'rgba(82, 192, 247, 0.5)';
-  ctx.fillRect(0, 2*ctx.shim, ctx.canvas.width, ctx.blocksize*5);
+  ctx.fillRect(0, 2*ctx.shim, ctx.canvas.width, ctx.blocksize*3);
   ctx.fillStyle = 'rgba(100, 120, 120, 1)';
   ctx.font = '25pt Helvetica, Arial';
   ctx.fillText("Conway's Game of Life", 3*ctx.shim, 4*ctx.shim);
   var living = countLiving(game.xy_array);
   ctx.font = '15pt Helvetica, Arial';
-  ctx.fillText('using HTML5 canvas + javascript', 5*ctx.shim, 6*ctx.shim);
-  ctx.fillText('alive: '+living+'  gen: '+generation, 0.8*ctx.canvas.width, 6*ctx.shim);
+  // ctx.fillText('using HTML5 canvas + javascript', 5*ctx.shim, 6*ctx.shim);
+  ctx.fillText('alive: '+living+'  gen: '+generation, 0.8*ctx.canvas.width, 4*ctx.shim);
 }
 
 function Clear () {
