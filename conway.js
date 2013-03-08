@@ -21,7 +21,6 @@ return ((this%n)+n)%n;
 function Init() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
-  ctx.font = '40pt Arial';
   // Determine blocksize so that grid is 40 blocks tall
   // this size is arbitrary, but keeping it small helps performance
   ctx.blocksize = ctx.canvas.height / 40; 
@@ -30,6 +29,18 @@ function Init() {
   ctx.gridwidth = Math.round(ctx.canvas.width / ctx.blocksize);
   ctx.gridheight = Math.round(ctx.canvas.height / ctx.blocksize);
   console.log(ctx.gridwidth, ctx.gridheight)
+}
+
+function countLiving(gamearray) {
+  var sum = 0;
+  for (var i = 0; i<ctx.gridheight; i++) {
+    for (var j = 0; j<ctx.gridwidth; j++) {
+     if (gamearray[i][j] != 0) {
+      sum++;
+    }
+  }
+}
+  return sum;
 }
 
 var game = {};
@@ -53,9 +64,9 @@ function gameInit() {
 
 function RuleCheck () {
   var new_xy_array = [];
-  for (i = 0; i <= ctx.gridwidth; i++) {
+  for (i = 0; i <= ctx.gridheight; i++) {
     new_xy_array[i] = [];
-  for (j = 0; j <= ctx.gridheight; j++) {
+  for (j = 0; j <= ctx.gridwidth; j++) {
     new_xy_array[i][j] = game.xy_array[i][j];
       var iabove = (i-1).mod(ctx.gridheight-1);
       var ibelow = (i+1).mod(ctx.gridheight-1);
@@ -115,7 +126,11 @@ function Draw () {
   }
   }
   ctx.fillStyle = 'rgba(82, 192, 247, 1)';
+  ctx.font = '40pt Arial';
   ctx.fillText("Conway's Game of Life", 3*ctx.shim, 4*ctx.shim);
+  var living = countLiving(game.xy_array);
+  ctx.font = '20pt Arial';
+  ctx.fillText('alive: '+living, 3*ctx.shim, (ctx.gridheight-5)*ctx.shim);
 }
 
 function Clear () {
@@ -123,7 +138,7 @@ function Clear () {
 }
 
 function Animation () {
-  // RuleCheck();
+  RuleCheck();
   Clear();
   Draw();
 }
