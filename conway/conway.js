@@ -23,9 +23,9 @@ game.setupCanvas = function () {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
 
-  // Determine blocksize so that grid is 40 blocks tall
-  // this size is arbitrary, but keeping it small helps performance
-  ctx.blocksize = ctx.canvas.height / 50; 
+  // Determine blocksize so that grid is relatively small.
+  // The size is arbitrary, but keeping it small helps performance.
+  ctx.blocksize = ctx.canvas.height / 100; 
   var marginsize = ctx.blocksize*.1;
   ctx.shim = ctx.blocksize + marginsize;
   ctx.gridwidth = Math.round(ctx.canvas.width / ctx.blocksize);
@@ -159,7 +159,7 @@ game.draw = function () {
     ctx.font = '25pt Helvetica, Arial';
     ctx.fillText("Conway's Game of Life", 3*ctx.shim, 4*ctx.shim);
     ctx.font = '15pt Helvetica, Arial';
-    ctx.fillText('alive: '+living+'  gen: '+this.generation, 0.8*ctx.canvas.width, 4*ctx.shim);
+    ctx.fillText('alive: '+living+'  gen: '+that.generation, 0.8*ctx.canvas.width, 4*ctx.shim);
   }
 
   function isDead(i, j) {
@@ -195,7 +195,7 @@ game.animation = function () {
 }
 
 game.startAnim = function () {
-  window.setInterval(game.animation, 100);
+  window.setInterval(game.animation, 50);
 }
 
 game.setupCanvas();
