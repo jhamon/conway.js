@@ -138,11 +138,12 @@ game.ruleCheck = function () {
 
 game.draw = function () {
   var ctx = this.ctx;
-  var colors = ['white', 'rgba(82, 192, 247, 0.8)'] // [color for dead pixel, color for white pixel]
+  var that = this;
+  var color = 'rgba(82, 192, 247, 0.8)' 
   var living = this.countLiving(this.xy_array);
 
   function drawDot(i, j) {
-    ctx.fillStyle = colors[game.xy_array[i][j]];
+    ctx.fillStyle = color;
     var yposition = i*ctx.shim;
     var xposition = j*ctx.shim;
     ctx.beginPath();
@@ -161,9 +162,18 @@ game.draw = function () {
     ctx.fillText('alive: '+living+'  gen: '+this.generation, 0.8*ctx.canvas.width, 4*ctx.shim);
   }
 
+  function isDead(i, j) {
+    return game.xy_array[i][j] === 0;
+  }
+
   for (i=0; i < ctx.gridheight; i++) {
     for (j=0; j < ctx.gridwidth; j++) {
-      drawDot(i, j);
+      if (isDead(i, j)) {
+        // Don't draw dead pixels
+        continue;
+      } else {
+        drawDot(i, j);
+      }
     }
   }
 
