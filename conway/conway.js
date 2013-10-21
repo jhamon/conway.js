@@ -10,7 +10,6 @@ window.requestAnimFrame = (
     };
   })();
 
-
 game = {};
 game.canvas = document.getElementById('mycanvas');
 game.ctx = game.canvas.getContext('2d');
@@ -50,27 +49,30 @@ game.countLiving = function () {
 }
 
 game.setupGame = function () {
-  var ctx = this.ctx; 
   this.generation = 0;
 
   // Seed proportion is the percent of pixels
   // that are initially living.
-  this.seed_propotion = 0.5;
+  this._seed_propotion = 0.5;
   this.xy_array = [];
+  this.buildStartArray();
+}
+
+game.buildStartArray = function () {
+  var ctx = this.ctx; 
 
   for (i = 0; i <= ctx.gridheight; i++) {
     this.xy_array[i] = [];
     for (j = 0; j <= ctx.gridwidth; j++) {
       var seed = Math.random();
-      if (seed < this.seed_propotion) {
-        this.xy_array[i][j] = 1;
+      if (seed < this._seed_propotion) {
+        this.xy_array[i][j] = 1; //Living
       } else {
-        this.xy_array[i][j] = 0;
+        this.xy_array[i][j] = 0; //Dead
       }
     }
   }
 }
-
 
 game.ruleCheck = function () {
   var ctx = this.ctx;
