@@ -24,7 +24,7 @@ game.setupCanvas = function () {
   ctx.canvas.height = window.innerHeight;
 
   // Determine blocksize so that grid is relatively small.
-  // The size is arbitrary, but keeping it small helps performance.
+  // The size is arbitrary, but keeping it small helps performance
   ctx.blocksize = ctx.canvas.height / 100; 
   var marginsize = ctx.blocksize*.1;
   ctx.shim = ctx.blocksize + marginsize;
@@ -99,17 +99,9 @@ game.ruleCheck = function () {
     return above + below + right + left + uleft + lleft + uright + lright;
   }
 
-  function isDead(i, j) {
-    return xy_array[i][j] === 0;
-  }
-
   for (i = 0; i <= ctx.gridheight; i++) {
     new_xy_array[i] = [];
     for (j = 0; j <= ctx.gridwidth; j++) {
-      // if (isDead(i, j)) {
-      //   continue;
-      // }
-      
       new_xy_array[i][j] = xy_array[i][j];
       var neighbors = countNeighbors(i, j);
 
@@ -127,7 +119,7 @@ game.ruleCheck = function () {
 
       // Any dead cell with exactly three live neighbors becomes 
       // a live cell, as if by reproduction.
-      if (!this.xy_array[i][j] && neighbors == 3) {
+      if (neighbors == 3) {
         new_xy_array[i][j] = 1;
       }
     }
