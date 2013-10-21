@@ -76,38 +76,48 @@ game.buildStartArray = function () {
 
 game.ruleCheck = function () {
   var ctx = this.ctx;
+  var xy_array = game.xy_array;
   var new_xy_array = [];
+
+  // Loop through xy_array, calculating number of living
+  // neighbors for each position. 
+
+  function countNeighbors(i, j) { 
+    var iabove = (i-1).mod(ctx.gridheight-1);
+    var ibelow = (i+1).mod(ctx.gridheight-1);
+    var jleft = (j-1).mod(ctx.gridwidth-1);
+    var jright = (j+1).mod(ctx.gridwidth-1);
+
+    var above = xy_array[iabove][j];
+    var below = xy_array[ibelow][j];
+    var right = xy_array[i][jright];
+    var left = xy_array[i][jleft]; 
+    var uleft = xy_array[iabove][jleft];
+    var lleft = xy_array[ibelow][jleft]; 
+    var uright = xy_array[iabove][jright]; 
+    var lright = xy_array[ibelow][jright];
+    return above + below + right + left + uleft + lleft + uright + lright;
+  }
+
   for (i = 0; i <= ctx.gridheight; i++) {
     new_xy_array[i] = [];
     for (j = 0; j <= ctx.gridwidth; j++) {
-      new_xy_array[i][j] = game.xy_array[i][j];
-        var iabove = (i-1).mod(ctx.gridheight-1);
-        var ibelow = (i+1).mod(ctx.gridheight-1);
-        var jleft = (j-1).mod(ctx.gridwidth-1);
-        var jright = (j+1).mod(ctx.gridwidth-1);
+      new_xy_array[i][j] = xy_array[i][j];
+      var neighbors = countNeighbors(i, j);
 
-        var above = game.xy_array[iabove][j];
-        var below = game.xy_array[ibelow][j];
-        var right = game.xy_array[i][jright];
-        var left = game.xy_array[i][jleft]; 
-        var uleft = game.xy_array[iabove][jleft];
-        var lleft = game.xy_array[ibelow][jleft]; 
-        var uright = game.xy_array[iabove][jright]; 
-        var lright = game.xy_array[ibelow][jright];
-        var neighbours = above + below + right + left + uleft + lleft + uright + lright;
-
-      // Any live cell with fewer than two live neighbours dies, as if caused by under-population.
-      if (neighbours < 2) {
+      // Any live cell with fewer than two live neighbo
+      rs dies, as if caused by under-population.
+      if (neighbors < 2) {
         new_xy_array[i][j] = 0;
       }
 
-      // Any live cell with more than three live neighbours dies, as if by overcrowding.
-      if (neighbours > 3) {
+      // Any live cell with more than three live neighbors dies, as if by overcrowding.
+      if (neighbors > 3) {
         new_xy_array[i][j] = 0;
       }
 
-      // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-      if (!this.xy_array[i][j] && neighbours == 3) {
+      // Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+      if (!this.xy_array[i][j] && neighbors == 3) {
         new_xy_array[i][j] = 1;
       }
     }
