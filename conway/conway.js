@@ -24,6 +24,7 @@ Number.prototype.mod = function(n) {
 game.setupGame = function () {
   this.generation = 0;
   this.paused = false;
+  this.drawable = false;
 
   // Seed proportion is the percent of cells
   // that are initially living.
@@ -138,7 +139,9 @@ game.ruleCheck = function () {
 }
 
 game.resurrectCell = function (x,y) {
-  game.xy_array[x][y] = 1;
+  if (game.drawable) {
+    game.xy_array[x][y] = 1;
+  }
 }
 
 game.gliderAtXY = function (x,y) {
@@ -243,11 +246,20 @@ game.startAnim();
 // });
 
 
+$(document).mousedown(function(event) {
+  if (game.paused) {
+    game.drawable = true;
     $(document).mousemove(function(event) {
-      if (game.paused) {
-        game.resurrectAtPixel(event.pageX, event.pageY);
-      }
-    });
+      game.resurrectAtPixel(event.pageX, event.pageY);
+    })
+  }
+});
+
+$(document).mouseup(function(event) {
+  if (game.paused) {
+    game.drawable = false;
+  }
+});
 
 
 // $(document).bind('keydown', '96', game.togglePause);
