@@ -56,7 +56,7 @@ game.setupCanvas = function () {
 
   // Determine blocksize so that grid is relatively small.
   // The size is arbitrary, but keeping it small helps performance
-  ctx.blocksize = ctx.canvas.height / 100;
+  ctx.blocksize = ctx.canvas.height / 70;
   var marginsize = ctx.blocksize*.1;
   ctx.shim = ctx.blocksize + marginsize;
   ctx.gridwidth = Math.round(ctx.canvas.width / ctx.blocksize);
@@ -257,6 +257,7 @@ $(document).mousedown(function(event) {
 
 $(document).mouseup(function(event) {
   if (game.paused) {
+    game.resurrectAtPixel(event.pageX, event.pageY);
     game.drawable = false;
   }
 });
