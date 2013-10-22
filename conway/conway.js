@@ -17,7 +17,10 @@ game = {};
 game.canvas = document.getElementById('mycanvas');
 game.ctx = game.canvas.getContext('2d');
 
-Number.prototype.mod = function(n) {
+Number.prototype.myMod = function(n) {
+  // This somewhat wat-worthy function is what
+  // allows cordinate wrapping from at the edges
+  // of the grid.
   return ((this%n)+n)%n;
 }
 
@@ -92,11 +95,11 @@ game.ruleCheck = function () {
   // neighbors for each position.
 
   function countNeighbors(i, j) {
-    var iabove = (i-1).mod(ctx.gridheight-1);
-    var iabove = (i-1).mod(ctx.gridheight-1);
-    var ibelow = (i+1).mod(ctx.gridheight-1);
-    var jleft = (j-1).mod(ctx.gridwidth-1);
-    var jright = (j+1).mod(ctx.gridwidth-1);
+    var iabove = (i-1).myMod(ctx.gridheight-1);
+    var iabove = (i-1).myMod(ctx.gridheight-1);
+    var ibelow = (i+1).myMod(ctx.gridheight-1);
+    var jleft = (j-1).myMod(ctx.gridwidth-1);
+    var jright = (j+1).myMod(ctx.gridwidth-1);
 
     var above = xy_array[iabove][j];
     var below = xy_array[ibelow][j];
@@ -158,8 +161,8 @@ game.resurrectAtPixel = function(x,y) {
 }
 
 game.pixelCordsToCellCoords = function (xpixel, ypixel) {
-  return {y: (Math.floor(xpixel/this.ctx.shim)),
-          x: (Math.floor(ypixel/this.ctx.shim))};
+  return  {y: Math.floor(xpixel/this.ctx.shim),
+           x: Math.floor(ypixel/this.ctx.shim)+1};
 }
 
 
