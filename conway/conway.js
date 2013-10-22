@@ -24,7 +24,7 @@ Number.prototype.mod = function(n) {
 game.setupGame = function () {
   this.generation = 0;
 
-  // Seed proportion is the percent of pixels
+  // Seed proportion is the percent of cells
   // that are initially living.
   this._seed_propotion = 0.5;
   this.xy_array = [];
@@ -136,6 +136,18 @@ game.ruleCheck = function () {
   this.xy_array = new_xy_array;
 }
 
+game.resurrectCell = function (x,y) {
+  this.xy_array[x][y] = 1;
+}
+
+game.resurrectAtPixel = function(x,y) {
+  this.resurrectCell(this.pixelCordsToCellCoords(x,y));
+}
+
+game.pixelCordsToCellCoords = function (xpixel, ypixel) {
+  return [xpixel.mod(this.ctx.shim), ypixel.mod(this.ctx.shim)];
+}
+
 
 
 //// Drawing and animation methods
@@ -174,7 +186,7 @@ game.draw = function () {
   for (i=0; i < ctx.gridheight; i++) {
     for (j=0; j < ctx.gridwidth; j++) {
       if (isDead(i, j)) {
-        // Don't draw dead pixels
+        // Don't draw dead cells
         continue;
       } else {
         drawDot(i, j);
