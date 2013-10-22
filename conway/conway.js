@@ -28,6 +28,7 @@ game.setupGame = function () {
   this.generation = 0;
   this.paused = false;
   this.drawable = false;
+  this.erase = false;
 
   // Seed proportion is the percent of cells
   // that are initially living.
@@ -141,9 +142,11 @@ game.ruleCheck = function () {
   this.xy_array = new_xy_array;
 }
 
-game.resurrectCell = function (x,y) {
-  if (game.drawable) {
+game.editCell = function (x,y) {
+  if (game.drawable && !game.erase) {
     game.xy_array[x][y] = 1;
+  } else if (game.drawable && game.erase) {
+    game.xy_array[x][y] = 0;
   }
 }
 
@@ -155,9 +158,9 @@ game.gliderAtXY = function (x,y) {
   game.xy_array[x][y-1] = 1;
 }
 
-game.resurrectAtPixel = function(x,y) {
+game.editAtPixel = function(x,y) {
   cell_coords = this.pixelCordsToCellCoords(x,y)
-  this.resurrectCell(cell_coords.x, cell_coords.y);
+  this.editCell(cell_coords.x, cell_coords.y);
 }
 
 game.pixelCordsToCellCoords = function (xpixel, ypixel) {
@@ -240,12 +243,16 @@ game.togglePause = function () {
   this.paused = !this.paused;
 }
 
+game.toggleEraser = function () {
+  this.erase = !this.erase;
+}
+
 game.setupCanvas();
 game.setupGame();
 game.startAnim();
 
 // $("#mycanvas").mousemove(function( event ) {
-//   game.resurrectAtPixel(event.pageX, event.pageY);
+//   game.editAtPixel(event.pageX, event.pageY);
 // });
 
 
@@ -253,22 +260,26 @@ $(document).mousedown(function(event) {
   if (game.paused) {
     game.drawable = true;
     $(document).mousemove(function(event) {
-      game.resurrectAtPixel(event.pageX, event.pageY);
+      game.editAtPixel(event.pageX, event.pageY);
     })
   }
 });
 
 $(document).mouseup(function(event) {
   if (game.paused) {
-    game.resurrectAtPixel(event.pageX, event.pageY);
+    game.editAtPixel(event.pageX, event.pageY);
     game.drawable = false;
   }
 });
 
-
-// $(document).bind('keydown', '96', game.togglePause);
 $(document).keydown(function(event) {
+  console.log("A key was pressed: " + event.keyCode);
   if (event.keyCode == 32) {
     game.togglePause();
+  }
+
+  if (event.keyCode == 68) {
+    // "d" was pressed
+    game.toggleEraser();
   }
 });
