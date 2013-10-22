@@ -26,7 +26,7 @@ game.setupGame = function () {
 
   // Seed proportion is the percent of cells
   // that are initially living.
-  this._seed_propotion = 0.5;
+  this._seed_propotion = 0.05;
   this.xy_array = [];
   this.buildStartArray();
 }
@@ -137,15 +137,21 @@ game.ruleCheck = function () {
 }
 
 game.resurrectCell = function (x,y) {
-  this.xy_array[x][y] = 1;
+  game.xy_array[x-1][y+1] = 1;
+  game.xy_array[x][y+1] = 1;
+  game.xy_array[x+1][y+1] = 1;
+  game.xy_array[x+1][y] = 1;
+  game.xy_array[x][y-1] = 1;
 }
 
 game.resurrectAtPixel = function(x,y) {
-  this.resurrectCell(this.pixelCordsToCellCoords(x,y));
+  cell_coords = this.pixelCordsToCellCoords(x,y)
+  this.resurrectCell(cell_coords.x, cell_coords.y);
 }
 
 game.pixelCordsToCellCoords = function (xpixel, ypixel) {
-  return [xpixel.mod(this.ctx.shim), ypixel.mod(this.ctx.shim)];
+  return {y: (Math.floor(xpixel/this.ctx.shim)),
+          x: (Math.floor(ypixel/this.ctx.shim))};
 }
 
 
@@ -217,3 +223,20 @@ game.startAnim = function () {
 game.setupCanvas();
 game.setupGame();
 game.startAnim();
+
+// $("#mycanvas").mousemove(function( event ) {
+//   game.resurrectAtPixel(event.pageX, event.pageY);
+// });
+
+jQuery(function($) {
+    var currentMousePos = { x: -1, y: -1 };
+    $(document).mousemove(function(event) {
+        currentMousePos.x = event.pageX;
+        currentMousePos.y = event.pageY;
+        game.resurrectAtPixel(event.pageX, event.pageY);
+    });
+});
+
+$(document).bind('mousemove',function(e){
+        $("#log").text("e.pageX: " + e.pageX + ", e.pageY: " + e.pageY);
+});
