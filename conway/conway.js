@@ -1,16 +1,16 @@
 //// Game setup:
 // #setupGame, #setupCanvas, #buildStartArray
 
-game = {};
+var Game = function () {}
 
 Number.prototype.myMod = function(n) {
   // This somewhat wat-worthy function is what
-  // allows cordinate wrapping from at the edges
-  // of the grid.
+  // allows cordinate wrapping at the edges of
+  // the grid.
   return ((this%n)+n)%n;
 }
 
-game.setupGame = function () {
+Game.prototype.setupGame = function () {
   this.generation = 0;
   this.paused = false;
   this.drawable = false;
@@ -23,7 +23,7 @@ game.setupGame = function () {
   this.buildStartArray();
 }
 
-game.buildStartArray = function () {
+Game.prototype.buildStartArray = function () {
   var ctx = this.ctx;
 
   for (i = 0; i <= ctx.gridheight; i++) {
@@ -39,7 +39,7 @@ game.buildStartArray = function () {
   }
 }
 
-game.setupCanvas = function () {
+Game.prototype.setupCanvas = function () {
   this.canvas = document.getElementById('mycanvas');
   this.ctx = this.canvas.getContext('2d');
 
@@ -61,7 +61,7 @@ game.setupCanvas = function () {
 //// Game logic
 // #countLiving, #ruleCheck
 
-game.countLiving = function () {
+Game.prototype.countLiving = function () {
   var ctx = this.ctx;
   var gamearray = this.xy_array
   var sum = 0;
@@ -76,7 +76,7 @@ game.countLiving = function () {
   return sum;
 }
 
-game.ruleCheck = function () {
+Game.prototype.ruleCheck = function () {
   var ctx = this.ctx;
   var xy_array = this.xy_array;
   var new_xy_array = [];
@@ -125,7 +125,7 @@ game.ruleCheck = function () {
   this.xy_array = new_xy_array;
 }
 
-game.editCell = function (x,y) {
+Game.prototype.editCell = function (x,y) {
   if (this.drawable && !this.erase) {
     this.xy_array[x][y] = 1;
   } else if (this.drawable && this.erase) {
@@ -133,20 +133,20 @@ game.editCell = function (x,y) {
   }
 }
 
-game.gliderAtXY = function (x,y) {
-  game.xy_array[x-1][y+1] = 1;
-  game.xy_array[x][y+1] = 1;
-  game.xy_array[x+1][y+1] = 1;
-  game.xy_array[x+1][y] = 1;
-  game.xy_array[x][y-1] = 1;
+Game.prototype.gliderAtXY = function (x,y) {
+  this.xy_array[x-1][y+1] = 1;
+  this.xy_array[x][y+1] = 1;
+  this.xy_array[x+1][y+1] = 1;
+  this.xy_array[x+1][y] = 1;
+  this.xy_array[x][y-1] = 1;
 }
 
-game.editAtPixel = function(x,y) {
+Game.prototype.editAtPixel = function(x,y) {
   cell_coords = this.pixelCordsToCellCoords(x,y)
   this.editCell(cell_coords.x, cell_coords.y);
 }
 
-game.pixelCordsToCellCoords = function (xpixel, ypixel) {
+Game.prototype.pixelCordsToCellCoords = function (xpixel, ypixel) {
   return  {y: Math.floor(xpixel/this.ctx.shim),
            x: Math.floor(ypixel/this.ctx.shim)+1};
 }
@@ -156,7 +156,7 @@ game.pixelCordsToCellCoords = function (xpixel, ypixel) {
 //// Drawing and animation methods
 // #draw, #clearScreen, #animation
 
-game.draw = function () {
+Game.prototype.draw = function () {
   var ctx = this.ctx;
   var that = this;
   var color = 'rgba(82, 192, 247, 0.8)'
@@ -195,12 +195,12 @@ game.draw = function () {
   drawHeader();
 }
 
-game.clearScreen = function () {
+Game.prototype.clearScreen = function () {
   var canvas = this.canvas;
   this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-game.animation = function () {
+Game.prototype.animation = function () {
   // Advance the game animation by one step.
   if (this.paused) {
     this.clearScreen();
@@ -213,18 +213,19 @@ game.animation = function () {
   }
 }
 
-game.startAnim = function () {
+Game.prototype.startAnim = function () {
   window.setInterval(this.animation.bind(this), 100);
 }
 
-game.togglePause = function () {
+Game.prototype.togglePause = function () {
   this.paused = !this.paused;
 }
 
-game.toggleEraser = function () {
+Game.prototype.toggleEraser = function () {
   this.erase = !this.erase;
 }
 
+var game = new Game();
 game.setupCanvas();
 game.setupGame();
 game.startAnim();
