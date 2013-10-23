@@ -77,7 +77,7 @@ game.countLiving = function () {
 
 game.ruleCheck = function () {
   var ctx = this.ctx;
-  var xy_array = game.xy_array;
+  var xy_array = this.xy_array;
   var new_xy_array = [];
 
   // Loop through xy_array, calculating number of living
@@ -125,10 +125,10 @@ game.ruleCheck = function () {
 }
 
 game.editCell = function (x,y) {
-  if (game.drawable && !game.erase) {
-    game.xy_array[x][y] = 1;
-  } else if (game.drawable && game.erase) {
-    game.xy_array[x][y] = 0;
+  if (this.drawable && !this.erase) {
+    this.xy_array[x][y] = 1;
+  } else if (this.drawable && this.erase) {
+    this.xy_array[x][y] = 0;
   }
 }
 
@@ -201,19 +201,19 @@ game.clearScreen = function () {
 
 game.animation = function () {
   // Advance the game animation by one step.
-  if (game.paused) {
-    game.clearScreen();
-    game.draw();
+  if (this.paused) {
+    this.clearScreen();
+    this.draw();
   } else {
-    game.ruleCheck();
-    game.clearScreen();
-    game.draw();
-    game.generation += 1;
+    this.ruleCheck();
+    this.clearScreen();
+    this.draw();
+    this.generation += 1;
   }
 }
 
 game.startAnim = function () {
-  window.setInterval(game.animation, 100);
+  window.setInterval(this.animation.bind(this), 100);
 }
 
 game.togglePause = function () {
