@@ -3,8 +3,117 @@ html, body {
   height: 100%;
   margin: 0px;
   overflow: hidden;
+  font-family: 'PT Mono', sans-serif;
 }
 
 canvas {
 	display: block;
+}
+
+#controlpanel {
+  align: center;
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: heavy;
+}
+
+div#controlcontainer {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  z-index: 1px;
+  opacity: 0.8;
+  /*background: #AFE5FA;*/
+  padding: 25px;
+  text-align: center;
+  border: 1px solid #f6f6f6;
+  background: #ffffff; /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover,  #ffffff 0%, #f6f6f6 47%, #ededed 100%); /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed)); /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* IE10+ */
+  background: radial-gradient(ellipse at center,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+p {
+  font-size: 1em;
+  margin: 0px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+p#rules {
+  text-align: left;
+  margin-left: 40px;
+}
+
+.sliderlabel {
+  font-weight: heavy;
+  font-size: 1.2em;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+div#inner {
+  /* Centeres the content inside the container*/
+  display: table;
+  margin: 0 auto;
+}
+
+
+/* Fancy slider controls */
+/* stackoverflow.com/questions/16796831/how-to-customize-only-with-css-for-html5-input-range-slider-vertical */
+input[type='range'] {
+    -webkit-appearance: none !important;
+    background:#D4D4D4;
+    height:7px;
+    width: 200px;
+}
+input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    background:#46758A;
+    height:20px;
+    width: 50px;
+    width:10px;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+    border-radius: 40px;
+}
+
+
+/* Fancy Buttons */
+/* http://css3buttongenerator.com/ */
+.fancybtn {
+  background: #46758A;
+  background-image: -webkit-linear-gradient(top, #46758A, #2980b9);
+  background-image: -moz-linear-gradient(top, #46758A, #2980b9);
+  background-image: -ms-linear-gradient(top, #46758A, #2980b9);
+  background-image: -o-linear-gradient(top, #46758A, #2980b9);
+  background-image: linear-gradient(to bottom, #46758A, #2980b9);
+  -webkit-border-radius: 10;
+  -moz-border-radius: 10;
+  border-radius: 10px;
+  color: #ffffff;
+  /*font-size: 20px;*/
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.fancybtn:hover {
+  background: #46758A;
+  background-image: -webkit-linear-gradient(top, #46758A, #3498db);
+  background-image: -moz-linear-gradient(top, #46758A, #3498db);
+  background-image: -ms-linear-gradient(top, #46758A, #3498db);
+  background-image: -o-linear-gradient(top, #46758A, #3498db);
+  background-image: linear-gradient(to bottom, #46758A, #3498db);
+  text-decoration: none;
+}
+
+.fancybtn:active {
+  position:relative;
+  top:1px;
 }

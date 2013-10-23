@@ -13,6 +13,7 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <link rel="stylesheet" href="conway.css">
+        <link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -22,6 +23,48 @@
         <!-- Add your site or application content here -->
         <div>
             <canvas id="mycanvas">Seriously, this is 2013.  Get a modern web browser.</canvas>
+        </div>
+
+        <div id="controlcontainer">
+            <h1>Conway's<br>Game of Life</h1>
+         <div id="inner">
+            <form id="controlpanel" >
+             <p>
+               <label class="sliderlabel" for="seed_ratio"> Seed Ratio </label><br>
+               Sparse <input type="range" min=0 max=10 step=2 value=6 id="seed_ratio"> Dense
+             </p>
+
+             <p>
+               <label class="sliderlabel" for="speed"> Speed </label><br>
+               Slow <input type="range" min=100 max=10 step=1 value=20 id="speed"> Fast
+             </p>
+
+            <p>
+               <label class="sliderlabel" for="size"> Pixel Size </label><br>
+               Tiny <input type="range" min=80 max=5 step=1 value=40 id="size"> Huge
+             </p>
+<p>
+    <h3>Rules</h3>
+
+    <p id="rules">
+        <input type="checkbox" id="rule1" checked="true">
+        <label for="rule1">Overpopulation kills</label>
+        <br>
+        <input type="checkbox" id="rule2" checked="true">
+        <label for="rule2">Loneliness kills</label>
+        <br>
+        <input type="checkbox" id="rule3" checked="true">
+        <label for="rule3">Reproduction</label>
+    </p>
+</p>
+
+             <p>
+               <a class="fancybtn" id="pause">Pause</a>
+               <a class="fancybtn" id="clearall">Clear</a>
+               <a class="fancybtn" id="reset">Reset</a>
+             </p>
+           </form>
+         </div>
         </div>
 
         <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
