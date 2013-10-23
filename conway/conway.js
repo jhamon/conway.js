@@ -1,15 +1,3 @@
-window.requestAnimFrame = (
-  function(callback) {
-    return window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    window.msRequestAnimationFrame ||
-    function(callback) {
-      window.setTimeout(callback, 1000 / 60);
-    };
-  })();
-
 //// Game setup:
 // #setupGame, #setupCanvas, #buildStartArray
 
@@ -190,11 +178,6 @@ game.draw = function () {
   }
 
   function drawHeader() {
-    ctx.fillStyle = 'rgba(82, 192, 247, 0.5)';
-    ctx.fillRect(0, 2*ctx.shim, ctx.canvas.width, ctx.blocksize*3);
-    ctx.fillStyle = 'rgba(100, 120, 120, 1)';
-    ctx.font = '25pt Helvetica, Arial';
-    ctx.fillText("Conway's Game of Life", 3*ctx.shim, 4*ctx.shim);
     ctx.font = '15pt Helvetica, Arial';
     ctx.fillText('alive: '+living+'  gen: '+that.generation, 0.8*ctx.canvas.width, 4*ctx.shim);
   }
@@ -236,7 +219,7 @@ game.animation = function () {
 }
 
 game.startAnim = function () {
-  window.setInterval(game.animation, 50);
+  window.setInterval(game.animation, 100);
 }
 
 game.togglePause = function () {
@@ -251,11 +234,6 @@ game.setupCanvas();
 game.setupGame();
 game.startAnim();
 
-// $("#mycanvas").mousemove(function( event ) {
-//   game.editAtPixel(event.pageX, event.pageY);
-// });
-
-
 $(document).mousedown(function(event) {
   if (game.paused) {
     game.drawable = true;
@@ -267,6 +245,7 @@ $(document).mousedown(function(event) {
 
 $(document).mouseup(function(event) {
   if (game.paused) {
+    game.editAtPixel(event.pageX, event.pageY);
     game.editAtPixel(event.pageX, event.pageY);
     game.drawable = false;
   }
