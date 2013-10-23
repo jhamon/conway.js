@@ -84,21 +84,15 @@ game.ruleCheck = function () {
   // neighbors for each position.
 
   function countNeighbors(i, j) {
-    var iabove = (i-1).myMod(ctx.gridheight-1);
-    var iabove = (i-1).myMod(ctx.gridheight-1);
-    var ibelow = (i+1).myMod(ctx.gridheight-1);
-    var jleft = (j-1).myMod(ctx.gridwidth-1);
-    var jright = (j+1).myMod(ctx.gridwidth-1);
+    var neighbor_deltas = [[-1, -1], [0, -1], [1, -1], [-1,0], [1,0], [-1,1], [0,1], [1,1]];
+    var neighbor_count = 0;
+    for (var k = 0; k < neighbor_deltas.length ; k++) {
+      var neigh_x = (neighbor_deltas[k][0] + i).myMod(ctx.gridheight-1);
+      var neigh_y = (neighbor_deltas[k][1] + j).myMod(ctx.gridheight-1);
+      neighbor_count += xy_array[neigh_x][neigh_y];
+    }
 
-    var above = xy_array[iabove][j];
-    var below = xy_array[ibelow][j];
-    var right = xy_array[i][jright];
-    var left = xy_array[i][jleft];
-    var uleft = xy_array[iabove][jleft];
-    var lleft = xy_array[ibelow][jleft];
-    var uright = xy_array[iabove][jright];
-    var lright = xy_array[ibelow][jright];
-    return above + below + right + left + uleft + lleft + uright + lright;
+    return neighbor_count;
   }
 
   for (i = 0; i <= ctx.gridheight; i++) {
