@@ -2,8 +2,6 @@
 // #setupGame, #setupCanvas, #buildStartArray
 
 game = {};
-game.canvas = document.getElementById('mycanvas');
-game.ctx = game.canvas.getContext('2d');
 
 Number.prototype.myMod = function(n) {
   // This somewhat wat-worthy function is what
@@ -42,6 +40,9 @@ game.buildStartArray = function () {
 }
 
 game.setupCanvas = function () {
+  this.canvas = document.getElementById('mycanvas');
+  this.ctx = this.canvas.getContext('2d');
+
   var ctx = this.ctx;
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
