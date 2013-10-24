@@ -61,6 +61,6 @@
   }
 
   Game.prototype.startAnim = function () {
-    window.setInterval(this.animation.bind(this), 100);
+    this.timer = window.setInterval(this.animation.bind(this), 100);
   }
 })(this);

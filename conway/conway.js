@@ -107,4 +107,10 @@
   Game.prototype.toggleEraser = function () {
     this.erase = !this.erase;
   }
+
+  Game.prototype.setFrameRate = function (fps) {
+    this.fps = fps;
+    clearInterval(this.timer);
+    this.timer = setInterval(this.animation.bind(this), 1000/fps)
+  }
 })(this);

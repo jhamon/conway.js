@@ -15,7 +15,6 @@ $(document).mousedown(function(event) {
 $(document).mouseup(function(event) {
   if (game.paused) {
     game.editAtPixel(event.pageX, event.pageY);
-    game.editAtPixel(event.pageX, event.pageY);
     game.drawable = false;
   }
 });
@@ -23,6 +22,7 @@ $(document).mouseup(function(event) {
 $(document).keydown(function(event) {
   console.log("A key was pressed: " + event.keyCode);
   if (event.keyCode == 32) {
+    // spacebar pressed
     game.togglePause();
   }
 
@@ -30,4 +30,8 @@ $(document).keydown(function(event) {
     // "d" was pressed
     game.toggleEraser();
   }
+});
+
+$("#speed").mouseup(function (event) {
+  game.setFrameRate($("#speed").val());
 });
