@@ -53,19 +53,19 @@
 
         // Any live cell with fewer than two live neighbors dies,
         // as if caused by under-population.
-        if (neighbors < 2) {
+        if (neighbors < 2 && this.rule1) {
           new_xy_array[i][j] = 0;
         }
 
         // Any live cell with more than three live neighbors dies,
         // as if by overcrowding.
-        if (neighbors > 3) {
+        if (neighbors > 3 && this.rule2) {
           new_xy_array[i][j] = 0;
         }
 
         // Any dead cell with exactly three live neighbors becomes
         // a live cell, as if by reproduction.
-        if (neighbors == 3) {
+        if (neighbors == 3 && this.rule3) {
           new_xy_array[i][j] = 1;
         }
       }

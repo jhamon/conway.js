@@ -6,6 +6,9 @@
       this.paused = false;
       this.drawable = false;
       this.erase = false;
+      this.rule1 = true;
+      this.rule2 = true;
+      this.rule3 = true;
 
       // Seed proportion is the percent of cells
       // that are initially living.
