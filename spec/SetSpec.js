@@ -21,6 +21,12 @@ describe("Set", function () {
       set.add(5);
       expect(set.length).toEqual(1);
     });
+
+    it("understands arrays", function () {
+      set.add([2,3]);
+      expect(set.values()[0][0]).toEqual(2);
+      expect(set.includes([2,3])).toEqual(true);
+    });
   });
 
   describe("#includes(number)", function () {
@@ -50,7 +56,7 @@ describe("Set", function () {
       set.add(1);
       set.remove(1);
       expect(set.length).toEqual(0);
-    })
+    });
   });
 
   describe("#remove(num)", function () {
@@ -64,6 +70,12 @@ describe("Set", function () {
       expect(set.remove(5).values()).toEqual([]);
     });
 
+    it("understands arrays", function () {
+      set.add([2,3]);
+      set.remove([2,3]);
+      expect(set.includes([2,3])).toEqual(false);
+    });
+
   });
 
   describe("#pop", function () {
@@ -74,7 +86,7 @@ describe("Set", function () {
 
     it("does nothing when the set is empty", function () {
       expect(set.pop()).toBeUndefined();
-    })
+    });
   })
 
   describe("#values", function () {
@@ -82,7 +94,6 @@ describe("Set", function () {
       set.add(5);
       set.add(6);
       set.add(6);
-      console.log(set.values())
       expect(set.values()[0]).toEqual(5);
       expect(set.values()[1]).toEqual(6);
     });
