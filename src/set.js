@@ -36,4 +36,8 @@
     var keys = Object.keys(this).filter( function (x) { return x !== 'length' });
     return keys.map(function (x) { return x | 0 });
   }
+
+  Set.prototype.forEach = function (callback) {
+    return this.values().forEach(callback);
+  }
 })(this);
