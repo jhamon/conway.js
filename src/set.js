@@ -1,7 +1,8 @@
-(function () {
-  var GOL = window.GOL = (window.GOL || {});
+var Set = (function () {
+  // var GOL = this.GOL = (this.GOL || {});
 
-  var Set = GOL.Set = function () {};
+  // var Set = GOL.Set = function () {};
+  function Set() {};
   Set.prototype = {length: 0};
   Set.prototype.constructor = Set;
 
@@ -67,4 +68,6 @@
   Set.prototype.filter = function (callback, thisArg) {
     return Array.prototype.filter.call(this.values(), callback, thisArg);
   }
+
+  return Set;
 })(this);

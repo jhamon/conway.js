@@ -1,8 +1,6 @@
-(function (window) {
-  "use strict";
+'use strict';
 
-  var GOL = window.GOL = (window.GOL || {} );
-
+var Game = (function () {
   function Grid(xsize , ysize) {
     this.xsize = xsize;
     this.ysize = ysize;
@@ -25,7 +23,7 @@
   };
 
   Grid.prototype._initCheckList = function() {
-    this.checkList = new GOL.Set();
+    this.checkList = new Set();
     for (var x = 0; x < this.xsize; x++) {
       for (var y = 0; y < this.ysize; y++) {
         this.checkList.add([x, y]);
@@ -71,12 +69,12 @@
   var realMod = function(n, divisor) {
     // Because only in js world does -1 % 10 === -1.
     return ((n%divisor)+divisor)%divisor;
-  }
+  };
 
   Grid.prototype._addToChangeList = function(x, y) {
     var neighbors = this._neighborCoords(x, y);
     neighbors.forEach( function (neighbor) {
-      this.checkList.add(neighbor) 
+      this.checkList.add(neighbor);
     }, this);
   };
 
@@ -87,7 +85,7 @@
   };
 
   Grid.prototype.toggle = function(x, y) {
-    this._set(x, y, !this.isAlive(x, y))
+    this._set(x, y, !this.isAlive(x, y));
   };
 
   Grid.prototype.isAlive = function(x, y) {
@@ -96,10 +94,6 @@
 
   Grid.prototype.setAlive = function(x ,y ) {
     return this._set(x, y, 1);
-  };
-
-  Grid.prototype.setDead = function(x, y) {
-    return this._set(x, y, 0);
   };
 
   Grid.prototype.countNeighborsAt = function(x, y) {
@@ -111,13 +105,13 @@
     return neighborCoords.map(getStatus).reduce(sum, 0);
   };
 
-  var Game = GOL.Game = function (xsize, ysize) {
+  function Game(xsize, ysize) {
     this.xsize = xsize;
     this.ysize = ysize;
     this.grid = new Grid(xsize, ysize);
     this.seed();
-    this.initChangeList()
-  };
+    this.initChangeList();
+  }
 
   Game.prototype.initChangeList = function () {
     var that = this;
@@ -127,7 +121,7 @@
       var y = coord[1];
       that.changeList.push([x, y, that.grid.isAlive(x, y)]);
     });
-  }
+  };
 
   Game.prototype.constructor = Game;
 
@@ -138,20 +132,14 @@
     for (var i=0; i < factor * this.xsize * this.ysize; i++) {
       var x = Math.random() * this.xsize | 0;
       var y = Math.random() * this.ysize | 0;
-      console.log("Seeding"); 
       this.grid.setAlive(x, y);
     }
-  };
-
-  Game.prototype.report = function () {
-    var str = "Changelist: " + this.changeList.length + ", Grid checklist: " + this.grid.checkList.length
-    console.log(str);
   };
  
   Game.prototype.tick = function () {
     var nodesToCheck = this.grid.checkList;
     this.changeList = [];
-    this.grid.checkList = new GOL.Set();
+    this.grid.checkList = new Set();
     var nodesToChange = this.checkNodes(nodesToCheck);
     this.changeNodes(nodesToChange);
   };
@@ -177,7 +165,7 @@
       var y = node[1];
       this.grid.toggle(x, y);
     }, this);
-  }
+  };
 
   Game.prototype._checkIfKeepAlive = function (x, y, neighbors) {
     if (neighbors < 2 || neighbors > 3) {
@@ -193,5 +181,31 @@
       return true;
     }
     return false;
-  }
+  };
+
+  return Game;
 })(this);
+
+var g;  
+importScripts('./set.js');
+
+function main(x, y) {
+  g = new Game(x, y);
+  g.seed(0.3);
+  setInterval(tock, 50);
+}
+
+function tock() {
+  g.tick();
+  self.postMessage(g.changeList);
+}
+
+self.addEventListener('message', 
+  function(e) {
+    self.postMessage('I got the message: ' + e.data);
+    if (e.data.command === 'init') {
+      self.postMessage('Starting now.');
+      main(e.data.x, e.data.y);
+    }
+    return;
+  }, false);

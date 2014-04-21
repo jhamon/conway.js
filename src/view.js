@@ -1,7 +1,7 @@
 (function () {
   var GOL = window.GOL = (window.GOL || {});
 
-  GOL.numPixels = 20000; // Smaller gives better performance.
+  GOL.numPixels = 10000; // Smaller gives better performance.
 
   var View = GOL.View = function () {
     this.canvas = document.getElementById('mycanvas');
@@ -36,17 +36,22 @@
 
 
   v = new View();
-  g = new GOL.Game(v.gridWidth, v.gridHeight);
-  g.seed(0.3);
 
-  function animate() {
-    g.changeList.forEach( 
-      function (pixel) { v.drawPixel(pixel[0], pixel[1], pixel[2]); }
-    );
-    g.tick();
-    requestAnimationFrame(animate);
-  }
+  var gameWorker = new Worker('./src/conway.js');
 
-  // window.setInterval(animate, 500);
-  animate();
+  gameWorker.addEventListener('message', function (e) {
+    var changePixels = e.data;
+    if (Object.prototype.toString.apply(changePixels) === '[object Array]') {
+      changePixels.forEach( function (pixel) {
+        v.drawPixel(pixel[0], pixel[1], pixel[2]);
+      });
+    }
+  }, false);
+
+  gameWorker.postMessage({
+    'command':'init', 
+    x: v.gridWidth,
+    y: v.gridHeight
+  })
+
 })(this);
