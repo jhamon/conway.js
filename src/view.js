@@ -1,13 +1,12 @@
 (function () {
   var GOL = window.GOL = (window.GOL || {});
 
-  GOL.numPixels = 10000; // Smaller gives better performance.
+  GOL.numPixels = 5000; // Smaller gives better performance.
 
   var View = GOL.View = function () {
     this.canvas = document.getElementById('mycanvas');
     this.ctx = this.canvas.getContext('2d');
     this.configure();
-
   }
 
   View.prototype.configure = function () {
@@ -30,10 +29,9 @@
   View.prototype.drawPixel = function (x, y, value) {
     var pixelX = this.dx * x;
     var pixelY = this.dx * y;
-    this.ctx.fillStyle = value ? "#000000" : "#FFFFFF";
+    this.ctx.fillStyle = value ? "#44A437" : "#081017";
     this.ctx.fillRect(pixelX, pixelY, this.dx, this.dx);
   };
-
 
   v = new View();
 

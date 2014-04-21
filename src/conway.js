@@ -1,11 +1,14 @@
 'use strict';
 
-var Game = (function () {
+(function (context) {
+  var GOL = context.GOL = (context.GOL || {});
+
   function Grid(xsize , ysize) {
     this.xsize = xsize;
     this.ysize = ysize;
     this._initRows();
     this._initCheckList();  
+    this._initNeighborCoords();
   }
 
   Grid.prototype._initRows = function() {
@@ -22,7 +25,28 @@ var Game = (function () {
     }
   };
 
+  Grid.prototype._initNeighborCoords = function () {
+    // The coordinates for the neighbors of a given
+    // x,y location do not change, so there's no reason
+    // to recalculate them thousands of times. Instead,
+    // memoize them.
+    var that = this;
+    this.neighborCoords = {};
+    this.checkList.forEach(function (coord) {
+      that.neighborCoords[ [coord[0], coord[1]] ] = that._neighborCoords(coord[0], coord[1]);
+    });
+  }
+
   Grid.prototype._initCheckList = function() {
+    // The checkList attribute is an array of 
+    // coordinates that need to be checked in the
+    // next iteration.  When a value is set on the
+    // grid, that location and all its neighbors
+    // must be considered in the next cycle so they
+    // are stored in checkList.
+
+    // For the first iteration, we have to look at 
+    // every location in the grid.  
     this.checkList = new Set();
     for (var x = 0; x < this.xsize; x++) {
       for (var y = 0; y < this.ysize; y++) {
@@ -45,7 +69,6 @@ var Game = (function () {
             [x-1, y], 
             [x-1, y-1]];
   };
-
 
   Grid.prototype._edgeCoords = function(x,y) {
     // For toroidal boundary conditions, I have 
@@ -71,8 +94,11 @@ var Game = (function () {
     return ((n%divisor)+divisor)%divisor;
   };
 
-  Grid.prototype._addToChangeList = function(x, y) {
-    var neighbors = this._neighborCoords(x, y);
+  Grid.prototype._addToCheckList = function(x, y) {
+    // The grid has changed at [x,y] so we add that location
+    // and all of its neighbors to the checkList to be
+    // examined in the next iteration. 
+    var neighbors = this.neighborCoords[[x, y]];
     neighbors.forEach( function (neighbor) {
       this.checkList.add(neighbor);
     }, this);
@@ -80,7 +106,7 @@ var Game = (function () {
 
   Grid.prototype._set = function(x, y, value) {
     this.rows[y][x] = value;
-    this._addToChangeList(x, y);
+    this._addToCheckList(x, y);
     return true;
   };
 
@@ -98,14 +124,14 @@ var Game = (function () {
 
   Grid.prototype.countNeighborsAt = function(x, y) {
     var that = this;
-    var neighborCoords = this._neighborCoords(x, y);
+    var neighborCoords = this.neighborCoords[[x, y]];
 
     var getStatus = function (pos) { return that.isAlive(pos[0], pos[1]); };
     var sum = function (previousVal, currentVal) { return previousVal + currentVal; };
     return neighborCoords.map(getStatus).reduce(sum, 0);
   };
 
-  function Game(xsize, ysize) {
+  var Game = GOL.Game = function Game(xsize, ysize) {
     this.xsize = xsize;
     this.ysize = ysize;
     this.grid = new Grid(xsize, ysize);
@@ -182,15 +208,13 @@ var Game = (function () {
     }
     return false;
   };
-
-  return Game;
 })(this);
 
 var g;  
 importScripts('./set.js');
 
 function main(x, y) {
-  g = new Game(x, y);
+  g = new GOL.Game(x, y);
   g.seed(0.3);
   setInterval(tock, 50);
 }
