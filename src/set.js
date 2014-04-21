@@ -12,6 +12,11 @@
     }
     return this;
   }
+
+  Set.prototype.push = function (x) {
+    // Alias #add
+    return this.add(x);
+  }
   
   Set.prototype.remove = function (x) {
     if (this.hasOwnProperty(x)) {
@@ -49,5 +54,17 @@
 
   Set.prototype.forEach = function (callback) {
     return this.values().forEach(callback);
+  }
+
+  Set.prototype.copy = function () {
+    var newObj = {};
+    this.values().forEach( function (key) {
+      newObj[ key ] = true;
+    })
+    return newObj;
+  }
+
+  Set.prototype.filter = function (callback, thisArg) {
+    return Array.prototype.filter.call(this.values(), callback, thisArg);
   }
 })(this);
