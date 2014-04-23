@@ -4,6 +4,7 @@
   var GOL = context.GOL = (context.GOL || {});
 
   function Grid(xsize , ysize) {
+    this.steps = 0;
     this.xsize = xsize;
     this.ysize = ysize;
     this._initRows();
@@ -161,11 +162,20 @@
   };
  
   Game.prototype.tick = function () {
+    this.steps += 1;
     var nodesToCheck = this.grid.checkNext;
     this.changedNodes = [];
     this.grid.checkNext = new Set();
     var nodesToChange = this.checkNodes(nodesToCheck);
     this.changeNodes(nodesToChange);
+  };
+
+  Game.prototype.instrument = function () {
+    var game = this;
+    setInterval(function () { 
+      self.postMessage({'status': 'Generations per second: ' + game.steps});
+      game.steps = 0;
+    },1000)
   };
 
   Game.prototype.checkNodes = function (nodes) {
@@ -213,8 +223,9 @@ importScripts('./set.js');
 
 function main(x, y) {
   g = new GOL.Game(x, y);
+  g.instrument();
   g.seed(0.3);
-  setInterval(tock, 40);
+  setInterval(tock, 10);
 }
 
 function tock() {

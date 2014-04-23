@@ -63,11 +63,13 @@
 
   gameWorker.addEventListener('message', function (e) {
     var changePixels = e.data;
-    if (Object.prototype.toString.apply(changePixels) === '[object Array]') {
+    if (typeof e.data.status !== 'undefined') {
+      console.log(e.data.status);
+    } else if (Object.prototype.toString.apply(changePixels) === '[object Array]') {
       changePixels.forEach( function (pixel) {
         v.drawPixel(pixel[0], pixel[1], pixel[2]);
       });
-    }
+    } 
   }, false);
 
   gameWorker.postMessage({
