@@ -1,7 +1,8 @@
+'use strict';
+
 (function () {
   var GOL = window.GOL = (window.GOL || {});
 
-  GOL.numPixels = 10000; // Smaller gives better performance.
 
   var View = GOL.View = function () {
     this.canvas = document.getElementById('mycanvas');
@@ -34,21 +35,28 @@
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
-    // Compute a pixel size that should run smoothly 
-    // in the browser.
-    var pixelArea = window.innerWidth * window.innerHeight;
-    this.pixelSize = Math.sqrt(pixelArea/GOL.numPixels)*0.9 | 0;
-    this.pixelMargin = this.pixelSize * 0.1 | 0;
-    this.dx = this.pixelSize + this.pixelMargin;
-
-    // Compute needed data grid sizes
-    this.gridHeight = window.innerHeight / this.pixelSize | 0 + 1;
-    this.gridWidth = window.innerWidth / this.pixelSize | 0 + 1;
+    this.numPixels = 10000; // Smaller gives better performance.
+    this.calculatePixelSize();
+    this.calculateGridSize();
 
     // Select a palette.
     this.palette = this.palettes[(Math.random() * this.palettes.length | 0)];
 
   };
+
+  View.prototype.calculatePixelSize = function () {
+    var pixelArea = window.innerWidth * window.innerHeight;
+    this.pixelSize = Math.sqrt(pixelArea/this.numPixels)*0.9 | 0;
+    this.pixelMargin = this.pixelSize * 0.1 | 0;
+    this.dx = this.pixelSize + this.pixelMargin;
+  }
+
+  View.prototype.calculateGridSize = function () {
+    this.gridHeight = window.innerHeight / this.pixelSize | 0 + 1;
+    this.gridWidth = window.innerWidth / this.pixelSize | 0 + 1;
+  };
+
+  View.prototype.resize = function () {}
 
   View.prototype.drawPixel = function (x, y, value) {
     var pixelX = this.dx * x;
@@ -57,9 +65,10 @@
     this.ctx.fillRect(pixelX, pixelY, this.dx, this.dx);
   };
 
-  v = new View();
+  var v = new View();
 
   var gameWorker = new Worker('./src/gameWorker.js');
+
   function drawPixelPayload(payload) {
     payload.forEach( function (pixel) {
         v.drawPixel(pixel[0], pixel[1], pixel[2]);
@@ -84,7 +93,12 @@
 
   gameWorker.postMessage({
     'command':'init',
-    'commandParams': {'x': v.gridWidth, 'y': v.gridHeight}
+    'commandParams': {
+              'x': v.gridWidth, 
+              'y': v.gridHeight,
+              'interval': 50,
+              'seed': 0.3
+            }
   });
 
 })(this);
