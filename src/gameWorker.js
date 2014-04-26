@@ -1,13 +1,31 @@
-// self.addEventListener('message', function(e) {
-//   self.postMessage(e.data);
-// }, false);
+(function () {
+  var g;  
+  importScripts('./conway.js');
+  importScripts('./set.js');
+  console.log('inside worker')
 
-// self.postMessage('Work started');
+  function tock() {
+    g.tick();
+    self.postMessage({'payload': g.changedNodes});
+  }
 
-// addEventListener('message', function (e) {
-//     if (e.command == 'start') {  
-//       console.log("Yes master!");
-//     }
-//   })
+  function main(x, y) {
+    console.log('inside main')
+    g = new GOL.Game(x, y);
+    g.instrument();
+    g.seed(0.3);
+    setInterval(tock, 100);
+  }
 
-// var game = new GOL.Game()
+  self.addEventListener('message', 
+    function(e) {
+      var status, command, payload, commandParams;
+      command = e.data.command;
+      commandParams = e.data.commandParams;
+
+      if (command === 'init') {
+        self.postMessage({'status': 'game is starting now.'});
+        main(commandParams.x, commandParams.y);
+      }
+    }, false);
+})();

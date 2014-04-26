@@ -173,7 +173,9 @@
   Game.prototype.instrument = function () {
     var game = this;
     setInterval(function () { 
-      self.postMessage({'status': 'Generations per second: ' + game.steps});
+      self.postMessage({
+        'status': 'Generations per second: ' + game.steps
+      });
       game.steps = 0;
     },1000)
   };
@@ -217,28 +219,3 @@
     return false;
   };
 })(this);
-
-var g;  
-importScripts('./set.js');
-
-function main(x, y) {
-  g = new GOL.Game(x, y);
-  g.instrument();
-  g.seed(0.3);
-  setInterval(tock, 10);
-}
-
-function tock() {
-  g.tick();
-  self.postMessage(g.changedNodes);
-}
-
-self.addEventListener('message', 
-  function(e) {
-    self.postMessage('I got the message: ' + e.data);
-    if (e.data.command === 'init') {
-      self.postMessage('Starting now.');
-      main(e.data.x, e.data.y);
-    }
-    return;
-  }, false);

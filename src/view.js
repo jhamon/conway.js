@@ -1,13 +1,13 @@
 (function () {
   var GOL = window.GOL = (window.GOL || {});
 
-  GOL.numPixels = 4000; // Smaller gives better performance.
+  GOL.numPixels = 10000; // Smaller gives better performance.
 
   var View = GOL.View = function () {
     this.canvas = document.getElementById('mycanvas');
     this.ctx = this.canvas.getContext('2d');
     this.configure();
-  }
+  };
 
   View.prototype.palettes = [
     ['#44A437', '#081017'], // my original
@@ -59,23 +59,32 @@
 
   v = new View();
 
-  var gameWorker = new Worker('./src/conway.js');
+  var gameWorker = new Worker('./src/gameWorker.js');
+  function drawPixelPayload(payload) {
+    payload.forEach( function (pixel) {
+        v.drawPixel(pixel[0], pixel[1], pixel[2]);
+    });
+  }
+
+  // Messaging protocol
+  //   POJO with any of the following.
+  //      status: message to print to console.
+  //      command: passing a function reference
+  //      commandParams: object containing data for command.
+  //      payload: raw data transfer. Assumed for pixel plotting.
 
   gameWorker.addEventListener('message', function (e) {
-    var changePixels = e.data;
-    if (typeof e.data.status !== 'undefined') {
-      console.log(e.data.status);
-    } else if (Object.prototype.toString.apply(changePixels) === '[object Array]') {
-      changePixels.forEach( function (pixel) {
-        v.drawPixel(pixel[0], pixel[1], pixel[2]);
-      });
-    } 
+    var status, payload;
+    status = e.data.status;
+    payload = e.data.payload;
+    
+    if (status !== undefined) console.log(status);
+    if (payload !== undefined) drawPixelPayload(payload);
   }, false);
 
   gameWorker.postMessage({
-    'command':'init', 
-    x: v.gridWidth,
-    y: v.gridHeight
+    'command':'init',
+    'commandParams': {'x': v.gridWidth, 'y': v.gridHeight}
   });
 
 })(this);
