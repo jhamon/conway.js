@@ -5,6 +5,7 @@
   var timerID;
   var interval;
 
+  importScripts('./grid.js');
   importScripts('./conway.js');
   importScripts('./set.js');
 

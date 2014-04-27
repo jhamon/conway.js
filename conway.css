@@ -71,6 +71,7 @@ img.forkme {
 a.byline, a.byline:active {
   padding: 2px;
   color: #000000;
+  letter-spacing: 0.1em;
   font-weight: bolder;
   text-decoration: none;
   background-color: rgba(255, 255, 255, 1);

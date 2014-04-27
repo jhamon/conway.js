@@ -30,7 +30,7 @@
     this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
     this.ctx.fillStyle = this.palette[1];
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-  }
+  };
 
   View.prototype.calculatePixelSize = function () {
     var pixelArea = window.innerWidth * window.innerHeight;
@@ -49,8 +49,8 @@
     message.commandParams.seed = $('#seed_ratio').val();
     message.commandParams.interval = $('#speed').val();
     this.numPixels = $('#size').val();
-    this.calculatePixelSize()
-    this.calculateGridSize()
+    this.calculatePixelSize();
+    this.calculateGridSize();
     message.commandParams.x = this.gridWidth;
     message.commandParams.y = this.gridHeight;
 
@@ -78,7 +78,6 @@
     this.ctx.fillStyle = alive ? this.palette[0] : this.palette[1];
     this.ctx.fillRect(pixelX, pixelY, this.pixelSize, this.pixelSize);
   };
-
 
   View.prototype.drawPixelPayload = function (payload) {
     payload.forEach( function (pixel) {
@@ -125,5 +124,4 @@
   }, false);
 
   gameWorker.postMessage(Messages.init);
-
 })(this);
