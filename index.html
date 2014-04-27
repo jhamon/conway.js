@@ -13,7 +13,6 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <link rel="stylesheet" href="conway.css">
-        <link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -21,59 +20,49 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <a href="https://github.com/jhamon/conway.js"><img style="position: absolute; top: 0;
-          left: 0; border: 0;"
+        <a href="https://github.com/jhamon/conway.js"><img class="forkme"
           src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png"
           alt="Fork me on GitHub"></a>
 
-        <div>
-            <canvas id="mycanvas">Seriously, this is 2014.  Get a modern web browser.</canvas>
-        </div>
+      <canvas id="mycanvas">Seriously, this is 2014.  Get a modern web browser.</canvas>
 
-        <div id="controlcontainer" hidden>
+        <div id="controlcontainer" >
             <h1>Conway's<br>Game of Life</h1>
+            <h3>Created by <a class="byline" href="http://www.hamon.io">Jennifer Hamon</a></h3>
          <div id="inner">
             <form id="controlpanel" >
-             <p>
-               <label class="sliderlabel" for="seed_ratio"> Seed Ratio </label><br>
-               Sparse <input type="range" min=0 max=10 step=2 value=6 id="seed_ratio"> Dense
-             </p>
+              <div class="sliders">
+                <p>
+                  <label class="sliderlabel" for="seed_ratio"> Seed Ratio </label><br>
+                  Sparse <input type="range" min=0.1 max=0.9 step=0.1 value=0.3 id="seed_ratio"> Dense
+                </p>
 
-             <p>
-               <label class="sliderlabel" for="speed"> Speed </label><br>
-               Slow <input type="range" min=1 max=50 step=1 value=25 id="speed"> Fast
-             </p>
+                <p>
+                  <label class="sliderlabel" for="speed"> Speed </label><br>
+                   Fast <input type="range" min=15 max=200 step=1 value=50 id="speed"> Slow
+                </p>
 
-            <p>
-               <label class="sliderlabel" for="size"> Pixel Size </label><br>
-               Tiny <input type="range" min=80 max=5 step=1 value=40 id="size"> Huge
-             </p>
-             
-              <p>
-                  <h3>Rules</h3>
+                <p>
+                  <label class="sliderlabel" for="size"> Pixel Size </label><br>
+                  Huge <input type="range" min=500 max=20000 step=100 value=10000 id="size"> Tiny
+                </p>
+              </div>
+   
+              <div class="description">
+                  <h2>Description</h2>
+This implementation of Life uses the HTML5 Canvas and Web Worker APIs. Since the game's iterative calculations are much more processor intensive than drawing on the canvas, we can ensure this page remains responsive by spinning calculations off into a seperate thread running in the background.
+              </div>
 
-                  <p id="rules">
-                      <input type="checkbox" id="rule1" checked="true">
-                      <label for="rule1">Overpopulation kills</label>
-                      <br>
-                      <input type="checkbox" id="rule2" checked="true">
-                      <label for="rule2">Loneliness kills</label>
-                      <br>
-                      <input type="checkbox" id="rule3" checked="true">
-                      <label for="rule3">Reproduction</label>
-                  </p>
-              </p>
+              <div class="buttons">
+                <a class="fancybtn" id="pause">Pause</a>
+                <a class="fancybtn" id="resume">Resume</a>
+                <a class="fancybtn" id="save">Save Wallpaper</a>
+              </div>
+            </form>
+         </div> <!-- end .inner -->
+        </div> <!-- end #controlcontainer -->
 
-             <p>
-               <a class="fancybtn" id="pause">Pause</a>
-               <a class="fancybtn" id="clearall">Clear</a>
-               <a class="fancybtn" id="reset">Reset</a>
-             </p>
-           </form>
-         </div>
-        </div>
-
-        <!-- <script src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
-        <script src="./src/view.js"></script>
+        <script type="application/javascript" src="./lib/jQuery.js"></script>
+        <script type="application/javascript" src="./src/view.js"></script>
     </body>
 </html>
