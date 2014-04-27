@@ -31,20 +31,10 @@
     for (var i=0; i < factor * this.xsize * this.ysize; i++) {
       var x = Math.random() * this.xsize | 0;
       var y = Math.random() * this.ysize | 0;
-      this.grid.toggle(x, y);
+      this.grid.toggleAt(x, y);
     }
   };
  
-  Game.prototype.tick = function () {
-    var nodesToCheck, nodesToChange;
-    this.steps += 1;
-    nodesToCheck = this.grid.checkNext;
-    this.grid.resetCheckNext();
-    this.changedNodes = [];
-    nodesToChange = nodesToCheck.filter(this._nodeShouldChange.bind(this));
-    this._changeNodes(nodesToChange);
-  };
-
   Game.prototype.instrument = function () {
     // This method enables performance logging.
     var game = this;
@@ -56,44 +46,47 @@
     }, 1000);
   };
 
-  Game.prototype._nodeShouldChange = function (node) {
+  Game.prototype.tick = function () {
+    var nodesToCheck, nodesToChange;
+    this.steps += 1;
+    nodesToCheck = this.grid.checkNext;
+    this.grid.resetCheckNext();
+    this.changedNodes = [];
+    nodesToCheck.map(this._markNodesToChange.bind(this));
+    this._changeNodes();
+  };
+
+  Game.prototype._markNodesToChange = function (node) {
     var x = node[0];
     var y = node[1];
     var neighbors = this.grid.countNeighborsAt(x, y);
 
     if (this.grid.isAliveAt(x, y)) {
-      return this._checkIfKeepAlive(x, y, neighbors);
+      this._checkIfKeepAlive(x, y, neighbors);
     } else {
-      return this._checkIfResurrect(x, y, neighbors);
+      this._checkIfResurrect(x, y, neighbors);
     }
   };
 
-  Game.prototype._changeNodes = function (nodes) {
-    nodes.forEach( function (node) {
-      var x = node[0];
-      var y = node[1];
-      this.grid.toggle(x, y);
+  Game.prototype._changeNodes = function () {
+    this.changedNodes.map( function (node) {
+      this.grid.toggleAt(node[0], node[1]);
     }, this);
   };
 
   Game.prototype._changeAt = function (x, y, alive) {
     this.changedNodes.push([x, y, alive]);
-    this.grid.toggle(x, y)
   }
 
   Game.prototype._checkIfKeepAlive = function (x, y, neighbors) {
     if (neighbors < 2 || neighbors > 3) {
-      this.changedNodes.push([x, y, 0]);
-      return true;
+      this._changeAt(x, y, 0);
     }
-    return false;
   };
 
   Game.prototype._checkIfResurrect = function (x, y, neighbors) {
     if (neighbors === 3) {
-      this.changedNodes.push([x,y,1]);
-      return true;
+      this._changeAt(x, y, 1);
     }
-    return false;
   };
 })(this);

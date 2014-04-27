@@ -36,10 +36,13 @@
       return Array.prototype.filter.call(this.values(), callback, thisArg);
     }
 
+    setConstructor.prototype.map = function (callback, thisArg) {
+      return Array.prototype.map.call(this.values(), callback, thisArg);
+    }
+
     setConstructor.prototype.pop = function () {
       var keys = Object.keys(this);
       delete this[ keys[0] ];
-      debugger;
       return keys[0] ? this._parseKey(keys[0]) : undefined;
     }
     

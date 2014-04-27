@@ -12,6 +12,27 @@
     this._initNeighborCoords();
   }
 
+  Grid.prototype.resetCheckNext = function () {
+    this.checkNext = new LIFE.Set();
+  };
+
+  Grid.prototype.toggleAt = function(x, y) {
+    this._set(x, y, !this.isAliveAt(x, y));
+  };
+
+  Grid.prototype.isAliveAt = function(x, y) {
+    return this.rows[y][x];
+  };
+
+  Grid.prototype.countNeighborsAt = function(x, y) {
+    var that = this;
+    var neighborCoords = this.neighborCoords[[x, y]];
+
+    var getStatus = function (pos) { return that.isAliveAt(pos[0], pos[1]); };
+    var sum = function (previousVal, currentVal) { return previousVal + currentVal; };
+    return neighborCoords.map(getStatus).reduce(sum, 0);
+  };
+
   Grid.prototype._initRows = function() {
     var singleRow = new Array(this.xsize);
     var newRow;
@@ -26,20 +47,8 @@
     }
   };
 
-  Grid.prototype._initNeighborCoords = function () {
-    // The coordinates for the neighbors of a given
-    // x,y location do not change, so there's no reason
-    // to recalculate them thousands of times. Instead,
-    // memoize them.
-    var that = this;
-    this.neighborCoords = {};
-    this.checkNext.forEach(function (coord) {
-      that.neighborCoords[ [coord[0], coord[1]] ] = that._neighborCoords(coord[0], coord[1]);
-    });
-  }
-
   Grid.prototype._initCheckNext = function() {
-    // The checkNext attribute is an array of 
+    // The checkNext attribute is a set of 
     // coordinates that need to be checked in the
     // next iteration.  When a value is set on the
     // grid, that location and all its neighbors
@@ -56,9 +65,21 @@
     }
   };
 
-  Grid.prototype._neighborCoords = function(x, y) {
+  Grid.prototype._initNeighborCoords = function () {
+    // The coordinates for the neighbors of a given
+    // x,y location do not change, so there's no reason
+    // to recalculate them thousands of times. Instead,
+    // memoize them.
+    var that = this;
+    this.neighborCoords = {};
+    this.checkNext.forEach(function (coord) {
+      that.neighborCoords[ [coord[0], coord[1]] ] = that._neighborCoordsAt(coord[0], coord[1]);
+    });
+  }
+
+  Grid.prototype._neighborCoordsAt = function(x, y) {
     if (x === 0 || x === this.xsize-1 || y === 0 || y === this.ysize-1) {
-      return this._edgeCoords(x, y);
+      return this._edgeCoordsAt(x, y);
     }
 
     return [[x+1, y], 
@@ -71,7 +92,7 @@
             [x-1, y-1]];
   };
 
-  Grid.prototype._edgeCoords = function(x,y) {
+  Grid.prototype._edgeCoordsAt = function(x,y) {
     // For toroidal boundary conditions, I have 
     // to specially handle edges when counting
     // live neighbors.
@@ -99,6 +120,7 @@
     // The grid has changed at [x,y] so we add that location
     // and all of its neighbors to checkNext to be
     // examined in the next iteration. 
+    this.checkNext.add([x,y])
     var neighbors = this.neighborCoords[[x, y]];
     neighbors.forEach( function (neighbor) {
       this.checkNext.add(neighbor);
@@ -109,26 +131,5 @@
     this.rows[y][x] = value;
     this._addToCheckNext(x, y);
     return true;
-  };
-
-  Grid.prototype.resetCheckNext = function () {
-    this.checkNext = new LIFE.Set();
-  };
-
-  Grid.prototype.toggle = function(x, y) {
-    this._set(x, y, !this.isAliveAt(x, y));
-  };
-
-  Grid.prototype.isAliveAt = function(x, y) {
-    return this.rows[y][x];
-  };
-
-  Grid.prototype.countNeighborsAt = function(x, y) {
-    var that = this;
-    var neighborCoords = this.neighborCoords[[x, y]];
-
-    var getStatus = function (pos) { return that.isAliveAt(pos[0], pos[1]); };
-    var sum = function (previousVal, currentVal) { return previousVal + currentVal; };
-    return neighborCoords.map(getStatus).reduce(sum, 0);
   };
 })(this);
