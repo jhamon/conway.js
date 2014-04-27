@@ -1,7 +1,7 @@
 'use strict';
 
 (function (context) {
-  var GOL = context.GOL = (context.GOL || {});
+  var LIFE = context.LIFE = (context.LIFE || {});
 
   function Grid(xsize , ysize) {
     this.steps = 0;
@@ -48,7 +48,7 @@
 
     // For the first iteration, we have to look at 
     // every location in the grid.  
-    this.checkNext = new Set();
+    this.checkNext = new LIFE.Set();
     for (var x = 0; x < this.xsize; x++) {
       for (var y = 0; y < this.ysize; y++) {
         this.checkNext.add([x, y]);
@@ -128,7 +128,7 @@
     return neighborCoords.map(getStatus).reduce(sum, 0);
   };
 
-  var Game = GOL.Game = function Game(xsize, ysize) {
+  var Game = LIFE.Game = function Game(xsize, ysize) {
     this.xsize = xsize;
     this.ysize = ysize;
     this.grid = new Grid(xsize, ysize);
@@ -165,7 +165,7 @@
     this.steps += 1;
     var nodesToCheck = this.grid.checkNext;
     this.changedNodes = [];
-    this.grid.checkNext = new Set();
+    this.grid.checkNext = new LIFE.Set();
     var nodesToChange = this.checkNodes(nodesToCheck);
     this.changeNodes(nodesToChange);
   };

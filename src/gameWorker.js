@@ -26,7 +26,7 @@
     var y = params.y;
     var seed = params.seed || 0.3;
     var interval = params.interval || 50;
-    g = new GOL.Game(x, y);
+    g = new LIFE.Game(x, y);
     // g.instrument();
     g.seed(seed);
     timerID = setInterval(tock, interval);
@@ -45,14 +45,6 @@
         pause();
         main(commandParams);
         self.postMessage({'status': 'Game modified. Restarting.'});
-        break;
-      case 'pause':
-        pause();
-        postMessage({'status': 'Game is paused.'});
-        break;
-      case 'resume':
-        resume();
-        self.postMessage({'resume': 'Resuming game.'});
         break;
     }
   }
