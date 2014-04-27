@@ -25,7 +25,7 @@
     }
 
     setConstructor.prototype._parseKey = function (key) {
-      return key.split(",").map(function (coord) { return coord | 0; })
+      return key.split(",").map(function (coord) { return parseInt(coord); })
     }
 
     setConstructor.prototype.forEach = function (callback) {
