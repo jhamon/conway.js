@@ -111,11 +111,15 @@
     return true;
   };
 
-  Grid.prototype.toggle = function(x, y) {
-    this._set(x, y, !this.isAlive(x, y));
+  Grid.prototype.resetCheckNext = function () {
+    this.checkNext = new LIFE.Set();
   };
 
-  Grid.prototype.isAlive = function(x, y) {
+  Grid.prototype.toggle = function(x, y) {
+    this._set(x, y, !this.isAliveAt(x, y));
+  };
+
+  Grid.prototype.isAliveAt = function(x, y) {
     return this.rows[y][x];
   };
 
@@ -123,7 +127,7 @@
     var that = this;
     var neighborCoords = this.neighborCoords[[x, y]];
 
-    var getStatus = function (pos) { return that.isAlive(pos[0], pos[1]); };
+    var getStatus = function (pos) { return that.isAliveAt(pos[0], pos[1]); };
     var sum = function (previousVal, currentVal) { return previousVal + currentVal; };
     return neighborCoords.map(getStatus).reduce(sum, 0);
   };
