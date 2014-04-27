@@ -24,7 +24,7 @@
           src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png"
           alt="Fork me on GitHub"></a>
 
-      <canvas id="mycanvas">Seriously, this is 2014.  Get a modern web browser.</canvas>
+      <canvas id="mycanvas">You can't view this cool HTML5 demo without installing an up-to-date browser.  Find the latest versions of all the major browsers online at <a href="http://browsehappy.com/">browsehappy.com</a>.</canvas>
 
         <div id="controlcontainer" >
             <h1>Conway's<br>Game of Life</h1>
@@ -49,13 +49,14 @@
               </div>
    
               <div class="description">
-                  <h2>Description</h2>
-This implementation of Life uses the HTML5 Canvas and Web Worker APIs. Since the game's iterative calculations are much more processor intensive than drawing on the canvas, we can ensure this page remains responsive by spinning calculations off into a seperate thread running in the background.
+This implementation of Life uses the HTML5 Canvas and Web Worker APIs. By using
+Web Workers to perform the intensive calculations in the background, the thread running this
+browser tab remains fluid and responsive. At very high pixel counts, inevitable slowdown in 
+the background iteration speed will not block events in the foreground.
               </div>
 
               <div class="buttons">
-                <a class="fancybtn" id="pause">Pause</a>
-                <a class="fancybtn" id="resume">Resume</a>
+                <a class="fancybtn" id="refresh">New Color Scheme</a>
                 <a class="fancybtn" id="save">Save Wallpaper</a>
               </div>
             </form>
