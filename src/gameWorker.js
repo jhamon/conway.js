@@ -1,6 +1,9 @@
 (function () {
+  'use strict';
+
   var g;  
   var timerID;
+  var interval;
 
   importScripts('./conway.js');
   importScripts('./set.js');
@@ -8,6 +11,14 @@
   function tock() {
     g.tick();
     self.postMessage({'payload': g.changedNodes});
+  }
+
+  function pause() {
+    clearInterval(timerID);
+  }
+
+  function  resume() {
+    timerID = setInterval(tock, interval);
   }
 
   function main(params) {
@@ -21,15 +32,31 @@
     timerID = setInterval(tock, interval);
   }
 
-  self.addEventListener('message', 
-    function(e) {
-      var status, command, payload, commandParams;
-      command = e.data.command;
-      commandParams = e.data.commandParams;
+  function processCommands (e) {
+    var command = e.data.command;
+    var commandParams = e.data.commandParams;
 
-      if (command === 'init') {
-        self.postMessage({'status': 'game is starting now.'});
+    switch (command) {
+      case 'init':
+        self.postMessage({'status': 'Game is starting now.'});
         main(commandParams);
-      }
-    }, false);
+        break;
+      case 'modify':
+        pause();
+        main(commandParams);
+        self.postMessage({'status': 'Game modified. Restarting.'});
+        break;
+      case 'pause':
+        pause();
+        postMessage({'status': 'Game is paused.'});
+        break;
+      case 'resume':
+        resume();
+        self.postMessage({'resume': 'Resuming game.'});
+        break;
+    }
+  }
+
+  self.addEventListener('message', processCommands, false);
+
 })();
