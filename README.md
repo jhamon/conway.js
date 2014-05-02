@@ -1,6 +1,6 @@
 # Conway's Game of Life
 
-[Play with it live on the web here](http://www.hamon.io/conway.js/conway.html)
+[Play with it live on the web here](http://www.hamon.io/conway.js/index.html)
 
 ## Tech Inventory
 
