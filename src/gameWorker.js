@@ -15,6 +15,7 @@
   }
 
   function pause() {
+    self.postMessage({'status': 'Pausing execution.'})
     clearInterval(timerID);
   }
 
@@ -44,6 +45,7 @@
         break;
       case 'modify':
         pause();
+        self.postMessage({'status': 'clear'}); // Tell view to clear itself.
         main(commandParams);
         self.postMessage({'status': 'Game modified. Restarting.'});
         break;

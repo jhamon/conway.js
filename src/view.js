@@ -53,9 +53,7 @@
     this.calculateGridSize();
     message.commandParams.x = this.gridWidth;
     message.commandParams.y = this.gridHeight;
-
     gameWorker.postMessage(message);
-    this.clearView();
   };
 
   View.prototype.setupListeners = function () {
@@ -89,13 +87,6 @@
 
   var gameWorker = new Worker('./src/gameWorker.js');
 
-  // Messaging protocol
-  //   POJO with any of the following.
-  //      status: message to print to console.
-  //      command: passing a function reference
-  //      commandParams: object containing data for command.
-  //      payload: raw data transfer. Assumed for pixel plotting.
-
   var Messages = {
     init: {
       'command':'init',
@@ -119,7 +110,7 @@
     status = e.data.status;
     payload = e.data.payload;
     
-    if (status !== undefined) console.log('Worker says: ' + status);
+    if (status === 'clear') v.clearView();
     if (payload !== undefined) v.drawPixelPayload(payload);
   }, false);
 
