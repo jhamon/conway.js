@@ -15,8 +15,8 @@
     // Resize canvas element to fix screen.
     this.width = window.innerWidth;
     this.height = window.innerHeight;
-    this.canvas.width = window.width;
-    this.canvas.height = window.height;
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
 
     this.numPixels = 10000; // Smaller gives better performance.
     this.calculatePixelSize();
