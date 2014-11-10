@@ -13,8 +13,10 @@
 
   View.prototype.configure = function () {
     // Resize canvas element to fix screen.
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.canvas.width = window.width;
+    this.canvas.height = window.height;
 
     this.numPixels = 10000; // Smaller gives better performance.
     this.calculatePixelSize();
@@ -27,13 +29,12 @@
   };
 
   View.prototype.clearView = function () {
-    this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
     this.ctx.fillStyle = this.palette[1];
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillRect(0, 0, this.width, this.height);
   };
 
   View.prototype.calculatePixelSize = function () {
-    var pixelArea = window.innerWidth * window.innerHeight;
+    var pixelArea = this.width * this.height;
     this.pixelSize = Math.sqrt(pixelArea/this.numPixels)*0.9 | 0;
     this.pixelMargin = 0;  // (this.pixelSize * 0.2) | 0;
     this.dx = this.pixelSize + this.pixelMargin;
